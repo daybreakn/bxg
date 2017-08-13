@@ -34,7 +34,7 @@
 	// 	console.log(key + '—>'+ location[key])
 	// }
 
-	define(['jquery'],function($){
+	define(['jquery','template','cookie'],function($,template){
 
 		if(document.cookie.indexOf('PHPSESSID') == -1 && location.pathname != '/login'){
 
@@ -47,8 +47,34 @@
 	//获取用户的登录信息(被计入在了cookie中)
 	// var loginfo=JSON.parse($.cookie('loginfo'));
 	var loginfo=$.cookie('loginfo') && JSON.parse($.cookie('loginfo'));
+	//将存在cookie的用户头像和名称显示在页面中
+	// $('.profile img').attr('src',loginfo.tc_avatar);
+	// $('.profile h4').text(loginfo.tc_name);
+	//template方法传递两个参数
+	//第一个参数是模板所在DOM标签的ID
+	// 第二个参数是模板所需要的数据(对象类型)
+	//template('tpl',data);
 
-	console.log(loginfo);
+
+	//complie方法也需要两个参数
+	//第一个参数是字符串形式的模板
+	//第二个参数是配置选项可以省略
+	// var tpl='<h1></h1>'
+	// template.complie(source,options),
+	//定义模板
+	var source=  '<div class="avatar img-circle">\
+                <img src="<%= tc_avatar %>">\
+            </div>\
+            <h4><%= tc_name %></h4>',
+            //编译模板
+             render=template.complie(source),
+             //传递数据
+              html=render(loginfo);
+            console.log(html);
+            //将拼凑好数据的html添加至dom
+            $('.profile').append(html);
+
+	// console.log(loginfo);
 
 	//退出登录
 	$.('#logout').on('click',function(){
